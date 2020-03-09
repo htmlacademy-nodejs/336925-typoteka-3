@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require(`fs`);
+const chalk = require(`chalk`);
 
 const {ExitCode} = require(`../constants`);
 const {getRandomNumber, randomDate, shuffle} = require(`../utils`);
@@ -90,10 +91,10 @@ module.exports = {
 
     fs.writeFile(FILE_NAME, content, (err) => {
       if (err) {
-        return console.info(`Can't write data to file...`);
+        return console.info(chalk.redBright(`Can't write data to file...`));
       }
 
-      return console.info(`Operation success. File created.`);
+      return console.info(chalk.greenBright(`Operation success. File created.`));
     });
   }
 };
