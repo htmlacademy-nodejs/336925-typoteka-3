@@ -3,8 +3,8 @@
 const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 
-const { ExitCode } = require(`../constants`);
-const { getRandomNumber, randomDate, shuffle } = require(`../utils`);
+const {ExitCode} = require(`../constants`);
+const {getRandomNumber, randomDate, shuffle} = require(`../utils`);
 
 const DEFAULT_COUNT = 1;
 const MAX_COUNT = 1000;
@@ -15,7 +15,7 @@ const FILE_SENTENCES_PATH = `./data/sentences.txt`;
 const FILE_TITLES_PATH = `./data/titles.txt`;
 const FILE_CATEGORIES_PATH = `./data/categories.txt`;
 
-const readContent = async filePath => {
+const readContent = async (filePath) => {
   try {
     const content = await fs.readFile(filePath, `utf-8`);
     return content.split(`\n`);
@@ -42,10 +42,7 @@ const generateOffers = (count, titles, categories, sentences) => {
       fullText: shuffle(sentences)
         .slice(0, getRandomNumber(1, sentences.length - 1))
         .join(` `),
-      сategory: shuffle(categories).slice(
-        0,
-        getRandomNumber(1, categories.length - 1)
-      )
+      сategory: shuffle(categories).slice(0, getRandomNumber(1, categories.length - 1))
     }));
 };
 
@@ -77,10 +74,10 @@ module.exports = {
     promiseMocks
       .then(([sentences, titles, categories]) =>
         JSON.stringify(
-          generateOffers(countOffer, titles, categories, sentences)
+            generateOffers(countOffer, titles, categories, sentences)
         )
       )
-      .then(async content => {
+      .then(async (content) => {
         try {
           await fs.writeFile(FILE_NAME, content);
           console.info(chalk.greenBright(`Operation success. File created.`));
