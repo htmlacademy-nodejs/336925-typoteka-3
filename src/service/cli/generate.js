@@ -3,8 +3,8 @@
 const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 
-const {ExitCode} = require(`../constants`);
-const {getRandomNumber, randomDate, shuffle} = require(`../utils`);
+const {ExitCode} = require(`../../constants`);
+const {getRandomNumber, randomDate, shuffle} = require(`../../utils`);
 
 const DEFAULT_COUNT = 1;
 const MAX_COUNT = 1000;

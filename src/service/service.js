@@ -1,6 +1,6 @@
 'use strict';
 
-const {Cli} = require(`../cli`);
+const {Cli} = require(`./cli`);
 
 const {USER_ARGV_INDEX} = require(`../constants`);
 const {DEFAULT_COMMAND} = require(`../constants`);
