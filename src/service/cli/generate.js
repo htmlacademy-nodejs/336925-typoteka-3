@@ -2,8 +2,9 @@
 
 const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
+const {nanoid} = require(`nanoid`);
 
-const {ExitCode} = require(`../../constants`);
+const {ExitCode, MAX_ID_LENGTH} = require(`../../constants`);
 const {getRandomNumber, randomDate, shuffle} = require(`../../utils`);
 
 const DEFAULT_COUNT = 1;
@@ -14,6 +15,7 @@ const MONTH_LIMIT_AGO = 3;
 const FILE_SENTENCES_PATH = `./data/sentences.txt`;
 const FILE_TITLES_PATH = `./data/titles.txt`;
 const FILE_CATEGORIES_PATH = `./data/categories.txt`;
+const FILE_COMMENTS_PATH = `./data/comments.txt`;
 
 const readContent = async (filePath) => {
   try {
@@ -30,10 +32,11 @@ const getStartDate = (date = new Date()) => {
   return date;
 };
 
-const generateOffers = (count, titles, categories, sentences) => {
+const generateOffers = (count, titles, categories, sentences, comments) => {
   return Array(count)
     .fill({})
     .map(() => ({
+      id: nanoid(MAX_ID_LENGTH),
       title: titles[getRandomNumber(0, titles.length - 1)],
       createdDate: randomDate(getStartDate(), new Date()).toLocaleDateString(),
       announce: shuffle(sentences)
@@ -42,7 +45,15 @@ const generateOffers = (count, titles, categories, sentences) => {
       fullText: shuffle(sentences)
         .slice(0, getRandomNumber(1, sentences.length - 1))
         .join(` `),
-      сategory: shuffle(categories).slice(0, getRandomNumber(1, categories.length - 1))
+      сategory: shuffle(categories).slice(0, getRandomNumber(1, categories.length - 1)),
+      comments: Array(getRandomNumber(0, 5))
+        .fill({})
+        .map(() => {
+          return {
+            id: nanoid(MAX_ID_LENGTH),
+            text: shuffle(comments).slice(0, getRandomNumber(1, 5)).join(` `),
+          };
+        }),
     }));
 };
 
@@ -52,11 +63,13 @@ module.exports = {
     const sentencesPromise = readContent(FILE_SENTENCES_PATH);
     const titlesPromise = readContent(FILE_TITLES_PATH);
     const categoriesPromise = readContent(FILE_CATEGORIES_PATH);
+    const commentsPromise = readContent(FILE_COMMENTS_PATH);
 
     const promiseMocks = Promise.all([
       sentencesPromise,
       titlesPromise,
-      categoriesPromise
+      categoriesPromise,
+      commentsPromise,
     ]);
 
     const [count] = args;
@@ -72,9 +85,9 @@ module.exports = {
     }
 
     promiseMocks
-      .then(([sentences, titles, categories]) =>
+      .then(([sentences, titles, categories, comments]) =>
         JSON.stringify(
-            generateOffers(countOffer, titles, categories, sentences)
+            generateOffers(countOffer, titles, categories, sentences, comments)
         )
       )
       .then(async (content) => {
